@@ -9,12 +9,12 @@ Features
 
 Important clause
 ----------------
-* The files of package com.ttt.common.mvp are original artworks of [me](https://github.com/GitSmark/).
-* The files of package com.ttt.common.adapter are derived from [tianzhijiexian/CommonAdapter](https://github.com/tianzhijiexian/CommonAdapter),thanks.
+* The files of package `com.ttt.common.mvp` are original artworks of [me](https://github.com/GitSmark/).
+* The files of package `com.ttt.common.adapter` are derived from [tianzhijiexian/CommonAdapter](https://github.com/tianzhijiexian/CommonAdapter),thanks.
 
 Sample Project
 --------------
-* The project structure by Model - View - Presenter
+* The project structure by `Model - View - Presenter`
 
 ![](20160306221534.png)
 
@@ -25,7 +25,7 @@ Usage
   ![](20160306221638.png)
   
  
-2. Create your ViewDelegate and ViewInterface.
+2. Create your `ViewDelegate` and `ViewInterface`.
   
 The Abstract ViewDelegate extents `CommonActivity`, `CommonFragment`, `CommonFragmentActivity` according to your need and add unimplemented methods, then implements ViewInterface that you want to done and realization.
   ```java
@@ -58,7 +58,7 @@ The Abstract ViewDelegate extents `CommonActivity`, `CommonFragment`, `CommonFra
  - `getData()`
  - `Other()`
 
-4. Add Listener if you need, then PresenterView extents ViewDelegate to handle events and your can implements CommonViewAdapterInterface to transmit adapter if you need.
+4. Add Listener if you need, then PresenterView extents ViewDelegate to handle events and your can implements `CommonViewAdapterInterface` to transmit adapter if you need.
 
    ```java
   public abstract class MainDelegate extends CommonActivity implements OnClickListener, OnItemClickListener, CommonViewAdapterInterface, MainInterface {
@@ -121,7 +121,7 @@ The Abstract ViewDelegate extents `CommonActivity`, `CommonFragment`, `CommonFra
 
 Customization
 -------------------
-  Customized yourself Delegate and Interface, you can easily customize whatever you want.
+  Customized yourself `Delegate` and `Interface`, you can easily customize whatever you want.
   
 Sample
 ----------
