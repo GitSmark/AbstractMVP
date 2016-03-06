@@ -117,7 +117,7 @@ The Abstract ViewDelegate extents `CommonActivity`, `CommonFragment`, `CommonFra
   }
   ```
 
-5.More usage of the CommonAdapter [get it](https://github.com/tianzhijiexian/CommonAdapter)
+5.More usage of the `CommonAdapter` [get it](https://github.com/tianzhijiexian/CommonAdapter)
 
 Customization
 -------------------
