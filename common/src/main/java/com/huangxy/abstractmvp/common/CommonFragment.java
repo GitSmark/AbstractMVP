@@ -114,6 +114,13 @@ public abstract class CommonFragment<T> extends Fragment implements CommonView.D
 
     protected void afterContentViewSet(){}
 
+    public <T extends View> T findViewById(@IdRes int id) {
+        if (rootView == null) {
+            throw new IllegalStateException("Fragment " + this + " does not have a view");
+        }
+        return rootView.findViewById(id);
+    }
+
     @Deprecated
     protected void initView(View root){}
 
