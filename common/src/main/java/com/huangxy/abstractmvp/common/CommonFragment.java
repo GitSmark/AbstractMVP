@@ -1,5 +1,6 @@
 package com.huangxy.abstractmvp.common;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,17 +25,13 @@ public abstract class CommonFragment<T> extends Fragment implements CommonView.D
 
     private Unbinder mBinder;
 
-    protected final String TAG = getClass().getSimpleName();
+    private boolean mCalled = false;
 
-    /**
-     * 是否可见
-     */
     private boolean mIsVisible = false;
 
-    /**
-     * 是否刷新
-     */
     private boolean mIsRefresh = false;
+
+    protected final String TAG = getClass().getSimpleName();
 
     protected View rootView;
 
@@ -51,49 +48,57 @@ public abstract class CommonFragment<T> extends Fragment implements CommonView.D
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        lazyLoad(getUserVisibleHint());
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        lazyLoad(isVisibleToUser);
+        if (mCalled) {
+            onStateChanged(isVisibleToUser);
+        }
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        lazyLoad(!hidden);
-    }
-
-    private void lazyLoad(boolean isVisibleToUser){
-        mIsVisible = isVisibleToUser;
-        if (isAdded() && isVisibleToUser) {
-            onActivate();
+        if (mCalled) {
+            onStateChanged(!hidden);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(mIsVisible && mIsRefresh){
-            mIsRefresh = false;
-            onReactivate();
+        onStateChanged(getUserVisibleHint() && !isHidden());
+        mCalled = true;
+    }
+
+    private void onStateChanged(boolean isVisibleToUser){
+        if (isAdded() && isVisibleToUser) { //当这个fragment对用户可见并且正在运行
+            if (mIsVisible && mIsRefresh) {
+                mIsRefresh = false;
+                onReactivate();
+            } else {
+                onActivate();
+            }
+            mIsVisible = true;
         }
     }
 
-    protected void onActivate(){
-        initData();
+    protected void onActivate(){ //界面可见时触发，注意：ViewPager切换页面会多次调用
+        if (!mIsVisible) {
+            initData();
+        }
     }
 
-    protected void onReactivate(){
+    protected void onReactivate(){ //页面重新激活时触发，需要在startNewActivity后设置setReactivate(true);
         onActivate();
     }
 
-    public void setReactivate(boolean isRefresh){ //设置页面重新激活的时候是否刷新界面，比如点击列表跳转至详情页时使用，若为true，当关闭详情页返回当前页面时会回调onReactivate()方法
+    public final void setReactivate(boolean isRefresh){ //设置页面重新激活的时候是否刷新界面，常用于点击列表跳转至详情页时使用，若为true，当关闭详情页返回当前页面时会回调onReactivate()方法
         mIsRefresh = isRefresh;
+    }
+
+    public final void startActivity(Intent intent, boolean isRefresh) {
+        startActivity(intent, null);
+        setReactivate(isRefresh);
     }
 
     @Override
@@ -115,7 +120,7 @@ public abstract class CommonFragment<T> extends Fragment implements CommonView.D
 
     protected void afterContentViewSet(){}
 
-    public <T extends View> T findViewById(@IdRes int id) {
+    public final <T extends View> T findViewById(@IdRes int id) {
         if (rootView == null) {
             throw new IllegalStateException("Fragment " + this + " does not have a view");
         }

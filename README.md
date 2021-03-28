@@ -144,7 +144,7 @@ AbstractMVP本身定位就是一种借鉴于iOS的创新型Android MVP开发模�
   ```
   然后在app的build.gradle文件中添加以下依赖
   ```
-  implementation 'com.github.GitSmark:AbstractMVP:2.0'
+  implementation 'com.github.GitSmark:AbstractMVP:2.0.1'
   ```
   
   **使用说明**： `Activity` 跟 `Fragment` 视图呈现方式不太一样，因此Fragment基类中多了一个 `rootView` ，还加入了懒加载，具体实现请查看 `CommonFragment` 。针对界面复用的问题（比如业务需要把Fragment换成Activity，这可不仅仅是改改类名的问题，更多的是一大堆生命周期需要去修改），**为了弱化`ViewController`的界面属性，让View层只关注视图呈现部分**，我给 `CommonActivity` 新增了以下两个常用方法，对标Fragment：
@@ -159,7 +159,7 @@ AbstractMVP本身定位就是一种借鉴于iOS的创新型Android MVP开发模�
       }
   }
   ```
-  此时， `ViewDelegate` 是`Activity` 还是`Fragment` ，都与 `ViewController` 无关。这里也推荐使用[ButterKnife](https://github.com/JakeWharton/butterknife)，简化代码，减少工作量的同时可以让View层更独立 ~~（体现在 Activity 跟 Fragment 中 findViewById() 的差异）~~ [Fix #118](https://github.com/GitSmark/AbstractMVP/blob/master/common/src/main/java/com/huangxy/abstractmvp/common/CommonFragment.java)，在业务逻辑变更的时候无需改动View层代码。另外针对前面提到的界面复用的问题，还可以对Activity和Fragment生命周期的差异去做兼容，模糊Activity/Fragment的概念，不过这种情况不常见，有需要请自行封装。
+  此时， `ViewDelegate` 是`Activity` 还是`Fragment` ，都与 `ViewController` 无关。这里也推荐使用[ButterKnife](https://github.com/JakeWharton/butterknife)，简化代码，减少工作量的同时可以让View层更独立 ~~（体现在 Activity 跟 Fragment 中 findViewById() 的差异）~~ [Fix #123](https://github.com/GitSmark/AbstractMVP/blob/master/common/src/main/java/com/huangxy/abstractmvp/common/CommonFragment.java)，在业务逻辑变更的时候无需改动View层代码。另外针对前面提到的界面复用的问题，还可以对Activity和Fragment生命周期的差异去做兼容，模糊Activity/Fragment的概念，不过这种情况不常见，有需要请自行封装。
   
   **特别说明**：AbstractMVP结构把数据存放在Presenter层，把`Adapter`放在View层，针对多场景下View层和Presenter层的数据交互问题，封装了 `CommonView` DataBinding 通用接口，并搭配使用[McAdapter](https://github.com/GitSmark/McAdapter)，实现可拔插多布局列表，支持item多处复用。
   

@@ -1,7 +1,7 @@
 package com.huangxy.abstractmvp.common;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -20,6 +20,10 @@ public abstract class CommonAppCompatActivity<T> extends AppCompatActivity imple
 
     private Unbinder mBinder;
 
+    private boolean mIsVisible = false;
+
+    private boolean mIsRefresh = false;
+
     protected final String TAG = getClass().getSimpleName();
 
     @Override
@@ -30,14 +34,44 @@ public abstract class CommonAppCompatActivity<T> extends AppCompatActivity imple
         mBinder = ButterKnife.bind(this);
         afterContentViewSet();
         initView();
-        initData();
     }
 
-    protected Context getContext() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mIsVisible && mIsRefresh) {
+            mIsRefresh = false;
+            onReactivate();
+        } else {
+            onActivate();
+        }
+        mIsVisible = true;
+    }
+
+    protected void onActivate(){
+        if (!mIsVisible) {
+            initData();
+        }
+    }
+
+    protected void onReactivate(){
+        onActivate();
+    }
+
+    public final void setReactivate(boolean isRefresh){
+        mIsRefresh = isRefresh;
+    }
+
+    public final void startActivity(Intent intent, boolean isRefresh) {
+        startActivity(intent, null);
+        setReactivate(isRefresh);
+    }
+
+    public final Context getContext() {
         return this;
     }
 
-    protected Activity getActivity() {
+    public final AppCompatActivity getActivity() {
         return this;
     }
 

@@ -2,6 +2,7 @@ package com.huangxy.abstractmvp.common;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -19,6 +20,10 @@ public abstract class CommonActivity<T> extends Activity implements CommonView.D
 
     private Unbinder mBinder;
 
+    private boolean mIsVisible = false;
+
+    private boolean mIsRefresh = false;
+
     protected final String TAG = getClass().getSimpleName();
 
     @Override
@@ -29,14 +34,44 @@ public abstract class CommonActivity<T> extends Activity implements CommonView.D
         mBinder = ButterKnife.bind(this);
         afterContentViewSet();
         initView();
-        initData();
     }
 
-    protected Context getContext() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mIsVisible && mIsRefresh) {
+            mIsRefresh = false;
+            onReactivate();
+        } else {
+            onActivate();
+        }
+        mIsVisible = true;
+    }
+
+    protected void onActivate(){ //当Activity可见且获得用户焦点能交互时触发
+        if (!mIsVisible) {
+            initData();
+        }
+    }
+
+    protected void onReactivate(){ //页面重新激活时触发，需要在startNewActivity后设置setReactivate(true);
+        onActivate();
+    }
+
+    public final void setReactivate(boolean isRefresh){ //设置页面重新激活的时候是否刷新界面，常用于点击列表跳转至详情页时使用，若为true，当关闭详情页返回当前页面时会回调onReactivate()方法
+        mIsRefresh = isRefresh;
+    }
+
+    public final void startActivity(Intent intent, boolean isRefresh) {
+        startActivity(intent, null);
+        setReactivate(isRefresh);
+    }
+
+    public final Context getContext() {
         return this;
     }
 
-    protected Activity getActivity() {
+    public final Activity getActivity() {
         return this;
     }
 

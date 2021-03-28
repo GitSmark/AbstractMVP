@@ -13,7 +13,7 @@ public class ListModel {
         //这里模拟请求接口获取数据
         List<McEntity> list = new ArrayList<>();
         for(int i=0; i<100; i++) {
-            list.add(new McEntity(0, ""+i));
+            list.add(new McEntity(""+i, 0));
         }
         if (list != null) {
             callback.success(list);
@@ -28,7 +28,7 @@ public class ListModel {
         //这里模拟查询数据库获取数据
         List<McEntity> list = new ArrayList<>();
         for(int i=0; i<50; i++) {
-            list.add(new McEntity(i%2, ""+i));
+            list.add(new McEntity(""+i, i%2));
         }
         if (list != null) {
             callback.success(list);
