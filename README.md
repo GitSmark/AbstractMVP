@@ -1,4 +1,4 @@
-[![](https://jitpack.io/v/GitSmark/AbstractMVP.svg)](https://jitpack.io/#GitSmark/AbstractMVP)
+[![](https://img.shields.io/badge/JitPack-2.0.1-brightgreen.svg)](https://jitpack.io/#GitSmark/AbstractMVP)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # AbstractMVP简介
@@ -99,7 +99,7 @@ AbstractMVP本身定位就是一种借鉴于iOS的创新型Android MVP开发模�
   ```
 4. 新建 `ViewController` ，View层接口方法跟界面控制（包括**用户交互监听事件**）在这里实现，在这里可以通过持有Presenter层接口协议的引用对象 `PresenterContract` 去调用相应的实现方法。
   
-  最后：别忘了实现getLayoutResId()方法！
+  最后：别忘了实现getLayoutResId()方法！若您的项目使用了 `ViewBinding/DataBinding` ，请使用**2.1.0**版本（代码见[dev分支](https://github.com/GitSmark/AbstractMVP/tree/dev)）。
   
   ```java
   public class LoginView extends LoginDelegate { //继承自对应的业务逻辑代理类
