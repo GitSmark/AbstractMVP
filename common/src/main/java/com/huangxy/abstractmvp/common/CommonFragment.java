@@ -6,12 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.LayoutRes;
+import androidx.viewbinding.ViewBinding;
 import androidx.fragment.app.Fragment;
 
-import androidx.annotation.IdRes;
-import androidx.annotation.Nullable;
-
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -21,9 +25,11 @@ import butterknife.Unbinder;
  * Created by huangxy on 2016/3/6.
  * https://github.com/GitSmark/AbstractMVP
  */
-public abstract class CommonFragment<T> extends Fragment implements CommonView.DataBinding<T> {
+public abstract class CommonFragment<T extends ViewBinding> extends Fragment implements CommonView.DataBinding {
 
     private Unbinder mBinder;
+
+    protected T $, bindingView;
 
     private boolean mCalled = false;
 
@@ -38,8 +44,19 @@ public abstract class CommonFragment<T> extends Fragment implements CommonView.D
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        //super.onCreateView(inflater, container, savedInstanceState);
         beforeContentViewSet();
-        rootView = inflater.inflate(getLayoutResId(), container, false);
+        try {
+            Type type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+            Method method = ((Class) type).getDeclaredMethod("inflate", LayoutInflater.class, LayoutInflater.class, ViewGroup.class, boolean.class);
+            $ = bindingView = (T) method.invoke(null, inflater, container, false); //优先使用Databinding自动生成，布局注入，控件绑定
+            rootView = bindingView.getRoot();
+        } catch (Exception e) {
+            rootView = getLayoutView();
+            if (rootView == null) {
+                rootView = inflater.inflate(getLayoutResId(), container, false);
+            }
+        }
         mBinder = ButterKnife.bind(this, rootView);
         afterContentViewSet();
         initView(rootView); //不推荐使用，这是Fragment特有的方法，Activity/Fragment
@@ -102,19 +119,26 @@ public abstract class CommonFragment<T> extends Fragment implements CommonView.D
     }
 
     @Override
-    public T getBindData() {
+    public Object getBindData() {
         return null;
     }
 
     @Override
-    public List<T> getBindListData() {
+    public List getBindListData() {
         return null;
     }
 
     @Override
     public void notifyDataSetChanged() {}
 
-    protected abstract int getLayoutResId();
+    protected View getLayoutView() {
+        return null;
+    }
+
+    @LayoutRes
+    protected int getLayoutResId() {
+        return 0;
+    }
 
     protected void beforeContentViewSet(){}
 

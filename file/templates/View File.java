@@ -3,14 +3,14 @@
 #set($PREFIX = ${StringUtils.sub($NAME, "View", "")})
 #set($PREFIX = ${StringUtils.sub($PREFIX, "Activity", "")})
 #set($PREFIX = ${StringUtils.sub($PREFIX, "Fragment", "")})
-public class ${NAME} extends ${PREFIX}Delegate {
+public class ${NAME} extends ${PREFIX}Delegate<Activity${PREFIX}Binding> {
 
-    private ${PREFIX}Contract.Presenter m${PREFIX}Presenter = this;
-    
-    @Override
-    protected int getLayoutResId() {
-        return 0;
-    }
+	private ${PREFIX}Contract.Presenter m${PREFIX}Presenter = this;
 
-    //这里实现View层的接口，监听用户交互事件，控制界面展示
+	@Override
+	protected void initView() {
+		//初始化界面
+	}
+
+	//这里实现View层的接口，监听用户交互事件，控制界面展示
 }

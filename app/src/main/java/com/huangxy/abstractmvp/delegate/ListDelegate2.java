@@ -1,5 +1,7 @@
 package com.huangxy.abstractmvp.delegate;
 
+import androidx.viewbinding.ViewBinding;
+
 import com.huangxy.abstractmvp.common.CommonActivity;
 import com.huangxy.abstractmvp.contract.ListContract;
 import com.huangxy.abstractmvp.model.ListModel;
@@ -8,7 +10,7 @@ import com.huangxy.mcadapter.McEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ListDelegate2 extends CommonActivity<McEntity> implements ListContract.Biz {
+public abstract class ListDelegate2<T extends ViewBinding> extends CommonActivity<T> implements ListContract.Biz {
 
     private ListContract.View mView = this;
     private List<McEntity> datalist = new ArrayList<>();

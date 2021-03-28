@@ -3,15 +3,19 @@ package com.huangxy.abstractmvp.delegate;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.viewbinding.ViewBinding;
+
+import com.huangxy.abstractmvp.activity.DetailActivity;
 import com.huangxy.abstractmvp.common.CommonActivity;
 import com.huangxy.abstractmvp.contract.ListContract;
+import com.huangxy.abstractmvp.model.DetailBean;
 import com.huangxy.abstractmvp.model.ListModel;
 import com.huangxy.mcadapter.McEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ListDelegate extends CommonActivity<McEntity> implements ListContract.Biz {
+public abstract class ListDelegate<T extends ViewBinding> extends CommonActivity<T> implements ListContract.Biz {
 
     private ListContract.View mView = this;
     private List<McEntity> datalist = new ArrayList<>();
@@ -64,11 +68,11 @@ public abstract class ListDelegate extends CommonActivity<McEntity> implements L
 
     @Override
     public void onItemAction(int i) {
-        mView.showToast("点击了项："+datalist.get(i).getItemEntity());
-        //Intent intent = new Intent(getActivity(), DetailActivity.class);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //startActivity(intent, true);
-        //or setReactivate(true);
+        DetailBean item = new DetailBean(TAG, "" + datalist.get(i).getItemEntity());
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("ARG_PARAM", item);
+        startActivity(intent, true);
     }
 
     @Override
